@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rainy Sun</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <svg class="bi me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
+          <span class="fs-4">Rainy Sun</span>
+        </a>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="http://127.0.0.1:8000/" class="nav-link">Current</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link active" aria-current="page">Forecast</a>
+            </li>
+        </ul>
+    </header>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-5 offset-1">
+                <h1>Прогноз погоды в вашем городе</h1>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="city">Город</label>
+                    <input type="text" class="form-control" name="city" placeholder="Введите город">
+                    <label for="date">Дата в формате "день.месяц" (максимум 5 дней), либо "-", если хотите вывести прогноз на 5 дней</label>
+                    <input type="text" class="form-control" name="date" placeholder="Введите дату или -">
+                    <input type="checkbox" id="checkbox" name="checkbox" value="true">
+                    <label for="checkbox">Узнать подробный прогноз</label><br>
+                    <input type="submit" name="action" value="Узнать" class="mt-2 btn btn-danger">
+                </form>
+            </div>
+            <div class="col-4 offset-2">
+                <h1>Информация</h1>
+                <div class="alert alert-info">
+                    <b>Город:</b> {{ city }}<br>
+                </div>
+                {% for info in all_info %}
+                <div class="alert alert-info">
+                    <div class="row">
+                        <div class="col-9">
+                            <b>Дата и время:</b> {{ info.dt }}<br>
+                            <b>Температура:</b> {{ info.temp }}<sup>о</sup>
+                            {% if checkbox == "true" %}
+                                <br>
+                                <b>Скорость ветра:</b> {{ info.speed }}<sup>м/с</sup><br>
+                                <b>Направление ветра:</b> {{ info.napr }}<sup>угл.</sup><br>
+                                <b>Влажность:</b> {{ info.water }}<sup>%</sup><br>
+                                <b>Давление:</b> {{ info.davl }}<sup>hPa</sup>
+                            {% endif %}
+                        </div>
+                        <div class="col-2 offset-1">
+                            <img src="http://openweathermap.org/img/w/{{ info.icon }}.png" alt="Фото погоды">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
